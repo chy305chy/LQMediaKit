@@ -29,6 +29,8 @@ class LQImageDecoder: NSObject {
     private(set) var scale: CGFloat = 0
     private(set) var framesCount: Int = 0
     private(set) var loopCount: Int = 0
+    private(set) var width: Int = 0
+    private(set) var height: Int = 0
     var imageData: Data? {
         get {
             return _imageData
@@ -122,6 +124,7 @@ class LQImageDecoder: NSObject {
                 decoded = true
             }
         }
+        
         let image = UIImage(cgImage: imageRef!)
         image.isDecoded = decoded
         frame.image = image
@@ -129,9 +132,35 @@ class LQImageDecoder: NSObject {
     }
     
     private func _imageRefAtIndex(_ index: Int, decoded: UnsafeMutablePointer<Bool>) -> CGImage? {
+        if !_finalized && index > 0 {
+            return nil
+        }
+        if frames == nil || frames!.count <= index {
+            return nil
+        }
         if _imageSource != nil {
-            let imageRef = CGImageSourceCreateImageAtIndex(_imageSource!, index, nil)
-            decoded.pointee = false
+            let dictKey = kCGImageSourceShouldCache
+            let dictValue = true
+            var imageRef = CGImageSourceCreateImageAtIndex(_imageSource!, index, [dictKey: dictValue] as CFDictionary)
+            if imageRef != nil {
+                let w = imageRef!.width
+                let h = imageRef!.height
+                if w == width && h == height {
+                    let newImageRef = CGImageCreateDecodedCopy(imageRef: imageRef!)
+                    imageRef = newImageRef
+                    decoded.pointee = true
+                } else {
+                    let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0, space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGBitmapInfo.byteOrder32Big.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue)
+                    if context != nil {
+                        context!.draw(imageRef!, in: CGRect(x: 0, y: height - h, width: w, height: h))
+                        let newImageRef = context!.makeImage()
+                        if newImageRef != nil {
+                            imageRef = newImageRef
+                            decoded.pointee = true
+                        }
+                    }
+                }
+            }
             return imageRef
         }
         return nil
@@ -151,11 +180,20 @@ class LQImageDecoder: NSObject {
         _finalized = finalized
         _imageData = data
         
-        if !_imageTypeKnown && _imageData!.count > 16 {
-            imageType = _getImageType(data: _imageData! as CFData)
-            _imageTypeKnown = true
+        let type = _getImageType(data: data as CFData)
+        if _imageTypeKnown {
+            if type != imageType {
+                return
+            } else {
+                _updateImageSource()
+            }
+        } else {
+            if imageData!.count > 16 {
+                imageType = type
+                _imageTypeKnown = true
+                _updateImageSource()
+            }
         }
-        _updateImageSource()
     }
     
     /// 接收到新的imageData，更新imageSource
@@ -218,15 +256,14 @@ class LQImageDecoder: NSObject {
             let frame = _LQImageFrame()
             frame.index = i
             frames.append(frame)
-            
+
             let properties = CGImageSourceCopyPropertiesAtIndex(_imageSource!, i, nil) as NSDictionary?
             if properties != nil {
                 var duration: TimeInterval = 0
-//                var orientationValue: Int = 0
                 var width: Int = 0
                 var height: Int = 0
                 var value: CFTypeRef?
-                
+
                 var valueKey = kCGImagePropertyPixelWidth
                 value = properties!.value(forKey: valueKey as String) as! CFNumber?
                 if value != nil {
@@ -255,13 +292,18 @@ class LQImageDecoder: NSObject {
                         }
                     }
                 }
-                
+
                 frame.duration = duration
                 frame.width = width
                 frame.height = height
+                
+                if self.width + self.height == 0 {
+                    self.width = width
+                    self.height = height
+                }
             }
         }
-        
+
         _sem_lock.wait()
         self.frames = frames
         _sem_lock.signal()

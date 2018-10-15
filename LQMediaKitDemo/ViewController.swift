@@ -11,6 +11,8 @@ import UIKit
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     private var tableView: UITableView = UITableView(frame: CGRect.zero, style: .plain)
+    
+    
     private var images = ["https://n.sinaimg.cn/photo/transform/700/w1000h500/20180926/_3Fr-hkmwytp2209491.jpg",
                           "http://i1.hoopchina.com.cn/u/1203/07/152/15516152/c5b1adbb.gif",
                           "http://i.imgur.com/GP1m9.png",
@@ -36,6 +38,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                           "http://pic29.photophoto.cn/20131021/0005018459075260_b.jpg",
                           "http://imgsrc.baidu.com/imgad/pic/item/0bd162d9f2d3572c25e340088013632763d0c3e5.jpg",
                           "http://pic5.photophoto.cn/20071217/0008020241208713_b.jpg"]
+    
+    
+    
+//     private var images = ["https://n.sinaimg.cn/photo/transform/700/w1000h500/20180926/_3Fr-hkmwytp2209491.jpg"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,13 +69,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+        return 120
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: TestCell = tableView.dequeueReusableCell(withIdentifier: "com.lqmediakit.test.tablecell", for: indexPath) as! TestCell
         
         cell.imgView.setImage(withUrl: URL(string: images[indexPath.row]))
+//        cell.imgView.setImage(withUrl: URL(string: images[indexPath.row]), placeholder: nil, options: [.Progressive, .AllowInvalidSSLCertificate], progress: { (received, total) in
+//            print("======\(received)=====\(total)")
+//        }, transform: nil, completion: nil)
         
         return cell
     }
@@ -77,7 +86,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 }
 
 class TestCell: UITableViewCell {
-    public var imgView = UIImageView(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
+    public var imgView = UIImageView(frame: CGRect(x: 0, y: 0, width: 120, height: 120))
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

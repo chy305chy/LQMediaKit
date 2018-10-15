@@ -186,7 +186,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LQImageKit/LQImageCache.swift"
-            timestampString = "560920078.928396"
+            timestampString = "561283501.0878381"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "77"
@@ -202,7 +202,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LQImageKit/LQImageCache.swift"
-            timestampString = "560920078.928545"
+            timestampString = "561283501.087908"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "93"
@@ -218,7 +218,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LQImageKit/LQImageCache.swift"
-            timestampString = "560920078.928658"
+            timestampString = "561283501.087958"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "90"
@@ -234,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LQImageKit/LQWebImageOperation.swift"
-            timestampString = "560950008.508504"
+            timestampString = "561283624.558779"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "428"
-            endingLineNumber = "428"
+            startingLineNumber = "459"
+            endingLineNumber = "459"
             landmarkName = "_startOperation()"
             landmarkType = "7">
             <Locations>
@@ -282,7 +282,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LQImageKit/LQImageCache.swift"
-            timestampString = "560920078.928881"
+            timestampString = "561283501.088443"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "140"
@@ -314,45 +314,29 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LQImageKit/LQWebImageOperation.swift"
-            timestampString = "560950008.508616"
+            timestampString = "561283624.558906"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "339"
-            endingLineNumber = "339"
+            startingLineNumber = "500"
+            endingLineNumber = "500"
+            landmarkName = "_cancelOperation()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LQImageKit/LQWebImageOperation.swift"
+            timestampString = "561283624.558982"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "348"
+            endingLineNumber = "348"
             landmarkName = "urlSession(_:task:didCompleteWithError:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "LQMediaKitDemo.LQWebImageOperation.urlSession(_: __C.NSURLSession, task: __C.NSURLSessionTask, didCompleteWithError: Swift.Optional&lt;Swift.Error&gt;) -&gt; ()"
-                  moduleName = "LQMediaKitDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/cuilanqing/Desktop/MyOpenSourceProject/LQMediaKit/LQImageKit/LQWebImageOperation.swift"
-                  timestampString = "560943396.39447"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "339"
-                  endingLineNumber = "339"
-                  offsetFromSymbolStart = "583">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 () -&gt; () in LQMediaKitDemo.LQWebImageOperation.urlSession(_: __C.NSURLSession, task: __C.NSURLSessionTask, didCompleteWithError: Swift.Optional&lt;Swift.Error&gt;) -&gt; ()"
-                  moduleName = "LQMediaKitDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/cuilanqing/Desktop/MyOpenSourceProject/LQMediaKit/LQImageKit/LQWebImageOperation.swift"
-                  timestampString = "560943396.397034"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "340"
-                  endingLineNumber = "340"
-                  offsetFromSymbolStart = "153">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

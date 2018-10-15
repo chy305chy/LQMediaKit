@@ -15,15 +15,6 @@ extension UIImageView {
         static var image_setter_key = "com.lqmediakit.image.imagesetter"
     }
     
-    private var _imageSetter: _LQWebImageSetter? {
-        get {
-            return objc_getAssociatedObject(self, &RuntimeKey.image_setter_key) as! _LQWebImageSetter?
-        }
-        set {
-            objc_setAssociatedObject(self, &RuntimeKey.image_setter_key, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-    }
-    
     var imageUrl: URL? {
         get {
             let setter = objc_getAssociatedObject(self, &RuntimeKey.image_setter_key) as! _LQWebImageSetter?
@@ -39,7 +30,7 @@ extension UIImageView {
     }
     
     func setImage(withUrl url: URL?, placeholder: UIImage?) {
-        setImage(withUrl: url, placeholder: placeholder, options: [.AllowInvalidSSLCertificate], manager: nil, progress: nil, transform: nil, completion: nil)
+        setImage(withUrl: url, placeholder: placeholder, options: [.AllowInvalidSSLCertificate, .Progressive], manager: nil, progress: nil, transform: nil, completion: nil)
     }
     
     func setImage(withUrl url: URL?, options: [LQWebImageOptions]) {
@@ -56,15 +47,16 @@ extension UIImageView {
     
     func setImage(withUrl url: URL?, placeholder: UIImage?, options: [LQWebImageOptions], manager: LQWebImageManager?, progress: LQWebImageProgress?, transform: LQWebImageTransform?, completion: LQWebImageCompletion?) {
         let _manager = manager ?? LQWebImageManager.sharedManager
-        
-        if _imageSetter == nil {
-            _imageSetter = _LQWebImageSetter()
+        var setter = objc_getAssociatedObject(self, &RuntimeKey.image_setter_key) as! _LQWebImageSetter?
+        if setter == nil {
+            setter = _LQWebImageSetter()
+            objc_setAssociatedObject(self, &RuntimeKey.image_setter_key, setter, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
-        if _imageSetter == nil {
+        if setter == nil {
             return
         }
         
-        let identifier = _imageSetter!.cancelWithNewImageUrl(imageUrl: url)
+        let identifier = setter!.cancelWithNewImageUrl(imageUrl: url)
         
         DispatchQueue.main.async {
             if url == nil {
@@ -81,44 +73,47 @@ extension UIImageView {
             if imageFromMemory != nil {
                 self.setImage(image: imageFromMemory!)
                 if completion != nil {
-                    completion!(url, imageFromMemory, nil)
+                    completion!(url, imageFromMemory, .finished, nil)
                 }
                 return
             }
             
             // 设置placeholder
-            if placeholder != nil {
-                self.setImage(image: placeholder!)
-            }
+            self.image = placeholder
             
             _LQWebImageSetter.setterQueue.async { [weak self] in
                 if self == nil {
                     return
                 }
                 var newIdentifier: __int32_t = 0
-                let newCompletion: LQWebImageCompletion = { (url, image, error) -> Void in
+                weak var weakSetter: _LQWebImageSetter?
+                let newCompletion: LQWebImageCompletion = { (url, image, loadStatus, error) -> Void in
+                    let readyToSetImage = (loadStatus == .finished || loadStatus == .progress) && image != nil
                     DispatchQueue.main.async {
-                        if image != nil {
+                        let identifierChanged = weakSetter != nil && weakSetter!.identifier != newIdentifier
+                        if readyToSetImage && !identifierChanged {
                             self!.setImage(image: image!)
                         }
                         if completion != nil {
-                            if newIdentifier != self!._imageSetter!.identifier {
-                                completion!(url, nil, NSError(domain: "com.lqmediakit.image", code: -1, userInfo: [NSLocalizedDescriptionKey: "cancelled."]))
+                            if newIdentifier != setter!.identifier {
+                                completion!(url, nil, .cancelled, NSError(domain: "com.lqmediakit.image", code: -1, userInfo: [NSLocalizedDescriptionKey: "cancelled."]))
                             } else {
-                                completion!(url, image, error)
+                                completion!(url, image, loadStatus, error)
                             }
                         }
                     }
                 }
 
-                newIdentifier = self!._imageSetter!.setOperation(withIdentifier: identifier, url: url!, options: options, manager: _manager, progress: progress, transform: transform, completion: newCompletion)
+                newIdentifier = setter!.setOperation(withIdentifier: identifier, url: url!, options: options, manager: _manager, progress: progress, transform: transform, completion: newCompletion)
+                weakSetter = setter
             }
         }
     }
     
     func cancelCurrentImageRequest() {
-        if _imageSetter != nil {
-            _ = _imageSetter!.cancel()
+        let setter = objc_getAssociatedObject(self, &RuntimeKey.image_setter_key) as! _LQWebImageSetter?
+        if setter != nil {
+            _ = setter!.cancel()
         }
     }
     

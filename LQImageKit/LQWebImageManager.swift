@@ -61,15 +61,15 @@ struct LQWebImageOptions : OptionSet {
     static let IgnoreFailedURL = LQWebImageOptions(rawValue: 1 << 15)
 }
 
-enum LQWebImageStatus {
-    case Progress
-    case Finished
-    case Cancelled
+enum LQWebImageLoadStatus {
+    case progress
+    case finished
+    case cancelled
 }
 
 typealias LQWebImageProgress = (Int, Int) -> Void
 typealias LQWebImageTransform = (URL, UIImage) -> UIImage?
-typealias LQWebImageCompletion = (URL?, UIImage?, NSError?) -> Void
+typealias LQWebImageCompletion = (URL?, UIImage?, LQWebImageLoadStatus, NSError?) -> Void
 
 
 class LQWebImageManager: NSObject {
@@ -84,8 +84,8 @@ class LQWebImageManager: NSObject {
     static let sharedManager = { () -> LQWebImageManager in
         let cache = LQImageCache.sharedCache
         let queue = OperationQueue()
-        queue.qualityOfService = .background
-        queue.maxConcurrentOperationCount = 2
+        queue.qualityOfService = .utility
+        queue.maxConcurrentOperationCount = 3
         let manager = LQWebImageManager(cache: cache, queue: queue)
         return manager
     }()

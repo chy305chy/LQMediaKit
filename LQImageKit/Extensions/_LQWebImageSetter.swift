@@ -47,7 +47,7 @@ class _LQWebImageSetter: NSObject {
                       completion: LQWebImageCompletion?) -> __int32_t {
         if identifier != self.identifier {
             if completion != nil {
-                completion!(imageUrl, nil, nil)
+                completion!(imageUrl, nil, .cancelled, nil)
             }
             return self.identifier
         }
@@ -55,13 +55,13 @@ class _LQWebImageSetter: NSObject {
         let operation = manager.requestImage(withUrl: imageUrl, options: options, progress: progress, transform: transform, completion: completion)
         
         if operation == nil && completion != nil {
-            completion!(imageUrl, nil, NSError(domain: "com.lqmediakit.image", code: -1, userInfo: [NSLocalizedDescriptionKey: "failed to create operation."]))
+            completion!(imageUrl, nil, .finished, NSError(domain: "com.lqmediakit.image", code: -1, userInfo: [NSLocalizedDescriptionKey: "failed to create operation."]))
         }
         
         _lock {
             if identifier == self.identifier {
                 if _operation != nil {
-                    _operation?.cancel()
+                    _operation!.cancel()
                 }
                 _operation = operation
             } else {

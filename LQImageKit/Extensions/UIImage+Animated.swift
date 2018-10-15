@@ -23,11 +23,11 @@ extension UIImage {
         }
         self.init(cgImage: image!.cgImage!, scale: scale, orientation: image!.imageOrientation)
         
-        if decoder.framesCount > 1 {
-            
-        } else {
-            
-        }
+//        if decoder.framesCount > 1 {
+//
+//        } else {
+//
+//        }
         
         self.isDecoded = true
     }
@@ -46,7 +46,10 @@ extension UIImage {
             var duration: TimeInterval = 0
             for i in 0 ..< frameCount {
                 duration = duration + decoder.imageDurationAtIndex(i)
-                animatedImages.append(decoder.imageAtIndex(i, shouldDecode: true)!)
+                let imageFrame = decoder.imageAtIndex(i, shouldDecode: true)
+                if imageFrame != nil {
+                    animatedImages.append(imageFrame!)
+                }
             }
             if duration == 0 {
                 /// 设置一个默认的duration值

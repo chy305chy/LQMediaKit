@@ -49,7 +49,23 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
         return thread
     }()
     
-//    private var started = false
+    static let _imageProcessQueue = { () -> DispatchQueue in
+        var queues = [DispatchQueue]()
+        var queueCount = ProcessInfo.processInfo.activeProcessorCount
+        var counter = 0
+        queueCount = queueCount < 1 ? 1 : queueCount > 16 ? 16 : queueCount
+        for i in 0 ..< queueCount {
+            let queue = DispatchQueue(label: "com.mediakit.image.imageprocess")
+            queues.append(queue)
+        }
+        counter = counter.advanced(by: 1)
+        var i: Int = counter
+        if i < 0 {
+            i = i.unsafeMultiplied(by: -1)
+        }
+        return queues[i % queueCount]
+    }()
+    
     private var expectedSize: Int = 0
     private var imageData: Data?
     private var options: [LQWebImageOptions]
@@ -62,9 +78,9 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
     private var _sessionConfig: URLSessionConfiguration?
     private var _session: URLSession?
     private var _sessionQueue: OperationQueue?
-    private var _imageTask: URLSessionDataTask?
     private var _imageSource: CGImageSource?
     private var _firstAnimatedImage: UIImage?
+    private let _MIN_PROGRESSIVE_TIME_INTERVAL: TimeInterval = 0.5
 
     // 重写start方法后，要保证这些key pathes支持KVO
     private var _executing: Bool = false
@@ -168,7 +184,7 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                 }
                 if completion != nil {
                     autoreleasepool {
-                        completion!(request?.url, nil, nil)
+                        completion!(request?.url, nil, .cancelled, nil)
                     }
                 }
             }
@@ -261,6 +277,10 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
             
             let progressive = options.contains(LQWebImageOptions.Progressive)
             let ignorePreDecode = options.contains(LQWebImageOptions.IgnoreImagePreDecode)
+            let now = CACurrentMediaTime()
+            if now - lastProgressiveDecodeTimestamp < _MIN_PROGRESSIVE_TIME_INTERVAL {
+                return
+            }
             
             if decoder == nil {
                 decoder = LQImageDecoder()
@@ -269,12 +289,17 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
             
             if progressive {
                 let image = decoder!.imageAtIndex(0, shouldDecode: !ignorePreDecode)
-                if image == nil {
-                    return
+                if image != nil {
+                    lock {
+                        if !self.isCancelled {
+                            if completion != nil {
+                                completion!(request!.url, image, .progress, nil)
+                                lastProgressiveDecodeTimestamp = now
+                            }
+                        }
+                    }
                 }
-                if completion != nil {
-                    completion!(request!.url, image, nil)
-                }
+                return
             } else {
                 if decoder?.imageType == .GIF || decoder?.imageType == .PNG {
                     if _firstAnimatedImage == nil {
@@ -283,8 +308,12 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                             return
                         }
                         _firstAnimatedImage = image
-                        if completion != nil {
-                            completion!(request!.url, _firstAnimatedImage, nil)
+                        lock {
+                            if !self.isCancelled {
+                                if completion != nil {
+                                    completion!(request!.url, _firstAnimatedImage, .progress, nil)
+                                }
+                            }
                         }
                     }
                 }
@@ -297,40 +326,42 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
             autoreleasepool {
                 lock {
                     if !self.isCancelled {
-                        if imageData == nil {
-                            return
-                        }
-                        if decoder == nil {
-                            decoder = LQImageDecoder()
-                        }
-                        
-                        let shouldDecode = !options.contains(LQWebImageOptions.IgnoreImagePreDecode)
-                        let allowAnimation = !options.contains(LQWebImageOptions.IgnoreAnimationImage)
-                        var image: UIImage?
-                        
-                        decoder!.updateImageData(data: imageData!, finalized: true)
-                        if allowAnimation {
-                            image = UIImage.animatedImage(withData: imageData!, scale: decoder!.scale)
-                            if shouldDecode {
-                                image = image?.imageByDecoded()
-                            }
-                        } else {
-                            image = decoder!.imageAtIndex(0, shouldDecode: shouldDecode)
-                        }
-                        
-                        if self.isCancelled {
-                            return
-                        }
-                        
-                        if image != nil && self.transform != nil {
-                            let newImage = self.transform!(request!.url!, image!)
-                            image = newImage
-                            if self.isCancelled {
+                        LQWebImageOperation._imageProcessQueue.async { [weak self] in
+                            if self == nil || self!.imageData == nil {
                                 return
                             }
+                            if self!.decoder == nil {
+                                self!.decoder = LQImageDecoder()
+                            }
+                            
+                            let shouldDecode = !self!.options.contains(LQWebImageOptions.IgnoreImagePreDecode)
+                            let allowAnimation = !self!.options.contains(LQWebImageOptions.IgnoreAnimationImage)
+                            var image: UIImage?
+                            
+                            self!.decoder!.updateImageData(data: self!.imageData!, finalized: true)
+                            if allowAnimation {
+                                image = UIImage.animatedImage(withData: self!.imageData!, scale: self!.decoder!.scale)
+                                if shouldDecode {
+                                    image = image?.imageByDecoded()
+                                }
+                            } else {
+                                image = self!.decoder!.imageAtIndex(0, shouldDecode: shouldDecode)
+                            }
+                            
+                            if self!.isCancelled {
+                                return
+                            }
+                            
+                            if image != nil && self!.transform != nil {
+                                let newImage = self!.transform!(self!.request!.url!, image!)
+                                image = newImage
+                                if self!.isCancelled {
+                                    return
+                                }
+                            }
+                            
+                            self!.perform(#selector(self!._didReceiveImageFromWeb), on: LQWebImageOperation._networkThread, with: image, waitUntilDone: false)
                         }
-                        
-                        self.perform(#selector(_didReceiveImageFromWeb), on: LQWebImageOperation._networkThread, with: image, waitUntilDone: false)
                     }
                 }
             }
@@ -340,7 +371,7 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                 lock {
                     if self.isCancelled {
                         if completion != nil {
-                            completion!(request!.url, nil, error as NSError?)
+                            completion!(request!.url, nil, .finished, error as NSError?)
                         }
                         task.cancel()
                         imageData = nil
@@ -365,7 +396,7 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                     if request == nil {
                         self.isFinished = true
                         if completion != nil {
-                            completion!(nil, nil, NSError(domain: "com.lqmediakit.image", code: -1, userInfo: [NSLocalizedDescriptionKey: "request is nil."]))
+                            completion!(nil, nil, .finished, NSError(domain: "com.lqmediakit.image", code: -1, userInfo: [NSLocalizedDescriptionKey: "request is nil."]))
                         }
                     } else {
                         self.isExecuting = true
@@ -432,7 +463,7 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                     lock {
                         if !self.isCancelled {
                             if completion != nil {
-                                completion!(request?.url, image!, nil)
+                                completion!(request?.url, image!, .finished, nil)
                             }
                         }
                         _finish()
@@ -440,16 +471,16 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                     return
                 }
                 if !options.contains(.IgnoreDiskCache) {
-                    DispatchQueue.global(qos: .background).async {
-                        if self.isCancelled {
+                    LQWebImageOperation._imageProcessQueue.async { [weak self] in
+                        if self == nil || self!.isCancelled {
                             return
                         }
-                        let image = self.cache!.getImage(forKey : self.cacheKey!, withType: [.Disk])
+                        let image = self!.cache!.getImage(forKey : self!.cacheKey!, withType: [.Disk])
                         if image != nil {
-                            self.cache?.setImage(image: image, imageData: nil, forKey: self.cacheKey!, cacheType: [.Memory])
-                            self.perform(#selector(self._didReceiveImageFromDiskCache), on: LQWebImageOperation._networkThread, with: image, waitUntilDone: false)
+                            self!.cache?.setImage(image: image, imageData: nil, forKey: self!.cacheKey!, cacheType: [.Memory])
+                            self!.perform(#selector(self!._didReceiveImageFromDiskCache), on: LQWebImageOperation._networkThread, with: image, waitUntilDone: false)
                         } else {
-                            self.perform(#selector(self._startRequest), on: LQWebImageOperation._networkThread, with: nil, waitUntilDone: false)
+                            self!.perform(#selector(self!._startRequest), on: LQWebImageOperation._networkThread, with: nil, waitUntilDone: false)
                         }
                     }
                     return
@@ -466,7 +497,7 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
             _session!.invalidateAndCancel()
             _session = nil
             if completion != nil {
-                completion!(nil, nil, NSError(domain: "com.lqmediakit.image", code: -1, userInfo: [NSLocalizedDescriptionKey: "user cancelled."]))
+                completion!(nil, nil, .cancelled, NSError(domain: "com.lqmediakit.image", code: -1, userInfo: [NSLocalizedDescriptionKey: "user cancelled."]))
             }
             _endBackgroundTask()
         }
@@ -479,7 +510,7 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                     if cache != nil {
                         if image != nil {
                             if completion != nil {
-                                completion!(request?.url, image, nil)
+                                completion!(request?.url, image, .finished, nil)
                             }
                             _finish()
                         } else {
@@ -499,9 +530,12 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                     if cache != nil {
                         if image != nil || options.contains(.RefreshImageCache) {
                             let data = imageData
-                            DispatchQueue.global(qos: .background).async {
-                                let type = self.options.contains(LQWebImageOptions.IgnoreDiskCache) ? [LQImageCacheType.Memory] : LQImageCacheType.All
-                                self.cache!.setImage(image: image, imageData: data, forKey: self.cacheKey!, cacheType: type)
+                            LQWebImageOperation._imageProcessQueue.async { [weak self] in
+                                if self == nil {
+                                    return
+                                }
+                                let type = self!.options.contains(LQWebImageOptions.IgnoreDiskCache) ? [LQImageCacheType.Memory] : LQImageCacheType.All
+                                self!.cache!.setImage(image: image, imageData: data, forKey: self!.cacheKey!, cacheType: type)
                             }
                         }
                     }
@@ -517,7 +551,7 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                     }
                     
                     if completion != nil {
-                        completion!(request!.url, image, error)
+                        completion!(request!.url, image, .finished, error)
                     }
                     self._finish()
                 }
@@ -526,15 +560,20 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
     }
     
     @objc private func _startRequest() {
-        _session = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: nil)
-        if _session == nil {
-            if completion != nil {
-                completion!(request!.url, nil, NSError(domain: "com.lqmediakit.image", code: -1, userInfo: [NSLocalizedDescriptionKey: "cannot create session."]))
+        lock {
+            if !self.isCancelled {
+                _session = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: nil)
+                if _session == nil {
+                    if completion != nil {
+                        completion!(request!.url, nil, .finished, NSError(domain: "com.lqmediakit.image", code: -1, userInfo: [NSLocalizedDescriptionKey: "cannot create session."]))
+                    }
+                }
+                let imageTask = _session!.dataTask(with: request!)
+                imageTask.resume()
+                _session?.finishTasksAndInvalidate()
             }
         }
-        _imageTask = _session!.dataTask(with: request!)
-        _imageTask!.resume()
-        _session?.finishTasksAndInvalidate()
+        
     }
     
     //MARK: - 子线程和子队列（全局）相关方法
