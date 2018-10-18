@@ -57,7 +57,7 @@ struct LQWebImageOptions : OptionSet {
     /// 忽略disk cache
     static let IgnoreDiskCache = LQWebImageOptions(rawValue: 1 << 14)
     
-    /// 忽略发生请求错误的URL
+    /// 忽略发生请求错误的URL，发生错误后不再请求该url的图片
     static let IgnoreFailedURL = LQWebImageOptions(rawValue: 1 << 15)
 }
 

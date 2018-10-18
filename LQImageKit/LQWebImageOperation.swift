@@ -49,6 +49,15 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
         return thread
     }()
     
+    static var _urlBlackList = { () -> Set<String> in
+        var set = Set<String>()
+        return set
+    }()
+    
+    static let _blackListSemLock = { () -> DispatchSemaphore in
+        return DispatchSemaphore(value: 1)
+    }()
+    
     static let _imageProcessQueue = { () -> DispatchQueue in
         var queues = [DispatchQueue]()
         var queueCount = ProcessInfo.processInfo.activeProcessorCount
@@ -150,6 +159,25 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
             string.append(">")
             return string
         }
+    }
+    
+    static func URLBlackListContains(urlString: String?) -> Bool {
+        if urlString == nil {
+            return false
+        }
+        _blackListSemLock.wait()
+        let contains = LQWebImageOperation._urlBlackList.contains(urlString!)
+        _blackListSemLock.signal()
+        return contains
+    }
+    
+    static func URLBlaskListAdd(urlString: String?) {
+        if urlString == nil {
+            return
+        }
+        _blackListSemLock.wait()
+        LQWebImageOperation._urlBlackList.insert(urlString!)
+        _blackListSemLock.signal()
     }
     
     @available(*, unavailable)
@@ -377,8 +405,13 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                         imageData = nil
                         self._finish()
                         
-                        //TODO: - 处理blacklist url事件
-                        
+                        //MARK: - 处理blacklist url事件
+                        if options.contains(LQWebImageOptions.IgnoreFailedURL) {
+                            let errorCode = URLError.Code.init(rawValue: (error! as NSError).code)
+                            if errorCode != .notConnectedToInternet && errorCode != .cancelled && errorCode != .timedOut && errorCode != .userCancelledAuthentication && errorCode != .networkConnectionLost && errorCode != .userAuthenticationRequired {
+                                LQWebImageOperation.URLBlaskListAdd(urlString: request!.url!.absoluteString)
+                            }
+                        }
                     }
                 }
             }
@@ -545,8 +578,12 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                     if image == nil {
                         error = NSError(domain: "com.lqmediakit.image", code: -1, userInfo: [NSLocalizedDescriptionKey: "Web image decode fail."])
                         if options.contains(.IgnoreFailedURL) {
-                            //TODO: - black url list 处理
-                            
+                            //MARK: - black url list 处理
+                            if LQWebImageOperation._urlBlackList.contains(request!.url!.absoluteString) {
+                                error = NSError(domain: NSURLErrorDomain, code: URLError.Code.fileDoesNotExist.rawValue, userInfo: [NSLocalizedDescriptionKey: "Failed to load URL, blacklisted."])
+                            } else {
+                                LQWebImageOperation.URLBlaskListAdd(urlString: request!.url!.absoluteString)
+                            }
                         }
                     }
                     
@@ -560,6 +597,32 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
     }
     
     @objc private func _startRequest() {
+        if self.isCancelled {
+            return
+        }
+        
+        if options.contains(LQWebImageOptions.IgnoreFailedURL) && LQWebImageOperation.URLBlackListContains(urlString: request!.url!.absoluteString) {
+            lock {
+                if !self.isCancelled {
+                    if completion != nil {
+                        completion!(request?.url, nil, LQWebImageLoadStatus.finished, nil)
+                    }
+                }
+                self._finish()
+            }
+            return
+        }
+        
+        if request!.url!.isFileURL {
+            var fileSize = 0
+            do {
+                try fileSize = request!.url!.resourceValues(forKeys: [URLResourceKey.fileSizeKey]).fileSize ?? 0
+            } catch {
+                
+            }
+            expectedSize = fileSize
+        }
+        
         lock {
             if !self.isCancelled {
                 _session = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: nil)
