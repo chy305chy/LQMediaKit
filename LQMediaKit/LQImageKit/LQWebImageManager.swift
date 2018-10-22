@@ -1,6 +1,6 @@
 //
 //  LQWebImageManager.swift
-//  LQMediaKitDemo
+//  LQMediaKit
 //
 //  Created by cuilanqing on 2018/9/20.
 //  Copyright © 2018 cuilanqing. All rights reserved.
@@ -18,17 +18,17 @@ struct LQWebImageOptions : OptionSet {
     /// 渐进式加载
     static let Progressive = LQWebImageOptions(rawValue: 1 << 1)
     
-    /// 失败后重试
-    static let RetryFailed = LQWebImageOptions(rawValue: 1 << 2)
+    /// 发生错误后将该url加入黑名单，不再重试，默认不加入黑名单
+    static let IgnoreFailedURL = LQWebImageOptions(rawValue: 1 << 2)
     
-    /// 优先级 - 高
-    static let HighPriority = LQWebImageOptions(rawValue: 1 << 3)
+    /// 忽略LQImageCache, 使用NSURLCache
+    static let UseURLCache = LQWebImageOptions(rawValue: 1 << 3)
     
-    /// 优先级 - 低
-    static let LowPriority = LQWebImageOptions(rawValue: 1 << 4)
+    /// 缓存图片和从缓存中取图片时忽略disk cache
+    static let IgnoreDiskCache = LQWebImageOptions(rawValue: 1 << 4)
     
-    /// 仅缓存到Memory中
-    static let CacheMemoryOnly = LQWebImageOptions(rawValue: 1 << 5)
+    /// 刷新缓存
+    static let RefreshImageCache = LQWebImageOptions(rawValue: 1 << 5)
     
     /// handle cookies
     static let HandleCookies = LQWebImageOptions(rawValue: 1 << 6)
@@ -45,20 +45,11 @@ struct LQWebImageOptions : OptionSet {
     /// 忽略动图
     static let IgnoreAnimationImage = LQWebImageOptions(rawValue: 1 << 10)
     
-    /// 刷新缓存
-    static let RefreshImageCache = LQWebImageOptions(rawValue: 1 << 11)
+    /// 非WiFi网络下动图只下载第一帧以节省流量（无论是否开启该选项想，WiFi网络下均默认加载动图的全部数据）
+    static let OnlyDownloadFirstFrameWhenAnimationImage = LQWebImageOptions(rawValue: 1 << 11)
     
-    /// 缓存原始image数据（默认情况下，缓存解码后的数据，但是空间占用较大）
-    static let CacheOriginalImageData = LQWebImageOptions(rawValue: 1 << 12)
-    
-    /// 忽略LQImageCache, 使用NSURLCache
-    static let UseURLCache = LQWebImageOptions(rawValue: 1 << 13)
-    
-    /// 忽略disk cache
-    static let IgnoreDiskCache = LQWebImageOptions(rawValue: 1 << 14)
-    
-    /// 忽略发生请求错误的URL，发生错误后不再请求该url的图片
-    static let IgnoreFailedURL = LQWebImageOptions(rawValue: 1 << 15)
+    /// 设置图片时使用fade动画，默认显示fade动画
+    static let ShowFadeAnimationWhenSetImage = LQWebImageOptions(rawValue: 1 << 12)
 }
 
 enum LQWebImageLoadStatus {

@@ -1,6 +1,6 @@
 //
 //  LQImageCoder.swift
-//  LQMediaKitDemo
+//  LQMediaKit
 //
 //  Created by cuilanqing on 2018/9/27.
 //  Copyright © 2018 cuilanqing. All rights reserved.
@@ -15,6 +15,7 @@ enum LQImageType {
     case JPEG
     case JPEG2000
     case PNG
+    case APNG
     case GIF
     case BMP
     case TIFF
@@ -182,6 +183,9 @@ class LQImageDecoder: NSObject {
         
         let type = _getImageType(data: data as CFData)
         if _imageTypeKnown {
+            if type == .APNG && imageType == .PNG {
+                imageType = type
+            }
             if type != imageType {
                 return
             } else {
@@ -342,8 +346,24 @@ class LQImageDecoder: NSObject {
             return .ICNS
         case _4BytesMask(c1: 0x47, c2: 0x49, c3: 0x46, c4: 0x38):
             return .GIF
-        case _4BytesMask(c1: 0x89, c2: 0x50, c3: 0x4e, c4: 0x47):
-            return .PNG
+        case _4BytesMask(c1: 0x89, c2: 0x50, c3: 0x4e, c4: 0x47): do {
+            if CFDataGetLength(data!) > 48 {
+                // 继续判断是否APNG格式图片，
+                // APNG格式的图片在普通PNG图片的IHDR头控制块后插入了一个动画控制块(acTL)用于告诉解析器这是一个动画，它位于第38~41字节，其内容为0x61, 0x63, 0x54, 0x4c
+                var apngIdentifierBytes: __uint32_t = 0
+                let alignedPtr = bytesPtr!.advanced(by: 37)
+                alignedPtr.withMemoryRebound(to: UInt32.self, capacity: 1) { ptr in
+                    apngIdentifierBytes = ptr.pointee
+                }
+                if apngIdentifierBytes == _4BytesMask(c1: 0x61, c2: 0x63, c3: 0x54, c4: 0x4c) {
+                    return .APNG
+                } else {
+                    return .PNG
+                }
+            } else {
+                return .PNG
+            }
+        }
 //        case _4BytesMask(c1: 0x52, c2: 0x49, c3: 0x46, c4: 0x46):
 //            var tmp: __uint32_t = 0
 //            bytesPtr!.advanced(by: 8).withMemoryRebound(to: UInt32.self, capacity: 1, { ptr in

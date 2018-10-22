@@ -1,6 +1,6 @@
 //
 //  LQWebImageOperation.swift
-//  LQMediaKitDemo
+//  LQMediaKit
 //
 //  Created by cuilanqing on 2018/9/20.
 //  Copyright © 2018 cuilanqing. All rights reserved.
@@ -40,6 +40,7 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
     private(set) var cache: LQImageCache?
     private(set) var cacheKey: String?
     var credential: URLCredential?
+    private let reachability = LQNetworkReachabilityManager.sharedManager
     
     static let _networkThread = { () -> Thread in
         let thread = Thread(target: LQWebImageOperation.self, selector: #selector(_networkThreadEntryPoint), object: nil)
@@ -210,6 +211,10 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                 if _session != nil {
                     _session?.invalidateAndCancel()
                 }
+                if !request!.url!.isFileURL && options.contains(.ShowNetworkActivity) {
+                    let networkActivityIndicatorManager = LQNetworkActivityIndicatorManager.sharedManager
+                    networkActivityIndicatorManager.decrementActivityCount()
+                }
                 if completion != nil {
                     autoreleasepool {
                         completion!(request?.url, nil, .cancelled, nil)
@@ -320,28 +325,34 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                 if image != nil {
                     lock {
                         if !self.isCancelled {
-                            if completion != nil {
-                                completion!(request!.url, image, .progress, nil)
-                                lastProgressiveDecodeTimestamp = now
+                            completion?(request!.url, image, .progress, nil)
+                            lastProgressiveDecodeTimestamp = now
+                            
+                            if decoder?.imageType == .GIF || (decoder?.imageType == .APNG) {
+                                if options.contains(.OnlyDownloadFirstFrameWhenAnimationImage) {//&& reachability.networkStatus == .wwan {
+                                    self.perform(#selector(self._didReceiveImageFromWeb), on: LQWebImageOperation._networkThread, with: image, waitUntilDone: false)
+                                }
                             }
                         }
                     }
                 }
                 return
             } else {
-                if decoder?.imageType == .GIF || decoder?.imageType == .PNG {
+                if decoder?.imageType == .GIF || decoder?.imageType == .APNG {
                     if _firstAnimatedImage == nil {
                         let image = decoder!.imageAtIndex(0, shouldDecode: !ignorePreDecode)
-                        if image == nil {
-                            return
-                        }
+                        
+                        guard image != nil else { return }
+                        
                         _firstAnimatedImage = image
                         lock {
                             if !self.isCancelled {
-                                if completion != nil {
-                                    completion!(request!.url, _firstAnimatedImage, .progress, nil)
-                                }
+                                completion?(request!.url, _firstAnimatedImage, .progress, nil)
                             }
+                        }
+                    } else {
+                        if options.contains(.OnlyDownloadFirstFrameWhenAnimationImage) {//&& reachability.networkStatus == .wwan {
+                            self.perform(#selector(self._didReceiveImageFromWeb), on: LQWebImageOperation._networkThread, with: _firstAnimatedImage, waitUntilDone: false)
                         }
                     }
                 }
@@ -416,7 +427,13 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                 }
             }
         }
-        _session = nil
+        
+        if !self.isCancelled {
+            if !request!.url!.isFileURL && options.contains(.ShowNetworkActivity) {
+                let networkActivityIndicatorManager = LQNetworkActivityIndicatorManager.sharedManager
+                networkActivityIndicatorManager.decrementActivityCount()
+            }
+        }
     }
     
     override func start() {
@@ -491,7 +508,10 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
         // 从cache中查找
         autoreleasepool {
             if cache != nil && cacheKey != nil && !options.contains(.UseURLCache) && !options.contains(.RefreshImageCache) {
-                let image = cache!.getImage(forKey: cacheKey!, withType: [.Memory])
+                var image = cache!.getImage(forKey: cacheKey!, withType: [.Memory])
+                if image == nil {
+                    image = cache!.getImage(forKey: cacheKey! + "firstFrame", withType: [.Memory])
+                }
                 if image != nil {
                     lock {
                         if !self.isCancelled {
@@ -508,9 +528,14 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                         if self == nil || self!.isCancelled {
                             return
                         }
-                        let image = self!.cache!.getImage(forKey : self!.cacheKey!, withType: [.Disk])
+                        var key = self!.cacheKey!
+                        var image = self!.cache!.getImage(forKey : key, withType: [.Disk])
+                        if image == nil {
+                            key = self!.cacheKey! + "firstFrame"
+                            image = self!.cache!.getImage(forKey: key, withType: [.Disk])
+                        }
                         if image != nil {
-                            self!.cache?.setImage(image: image, imageData: nil, forKey: self!.cacheKey!, cacheType: [.Memory])
+                            self!.cache?.setImage(image: image, imageData: nil, forKey: key, cacheType: [.Memory])
                             self!.perform(#selector(self!._didReceiveImageFromDiskCache), on: LQWebImageOperation._networkThread, with: image, waitUntilDone: false)
                         } else {
                             self!.perform(#selector(self!._startRequest), on: LQWebImageOperation._networkThread, with: nil, waitUntilDone: false)
@@ -529,6 +554,10 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
         if _session != nil {
             _session!.invalidateAndCancel()
             _session = nil
+            if !request!.url!.isFileURL && options.contains(.ShowNetworkActivity) {
+                let networkActivityIndicatorManager = LQNetworkActivityIndicatorManager.sharedManager
+                networkActivityIndicatorManager.decrementActivityCount()
+            }
             if completion != nil {
                 completion!(nil, nil, .cancelled, NSError(domain: "com.lqmediakit.image", code: -1, userInfo: [NSLocalizedDescriptionKey: "user cancelled."]))
             }
@@ -567,8 +596,14 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                                 if self == nil {
                                     return
                                 }
-                                let type = self!.options.contains(LQWebImageOptions.IgnoreDiskCache) ? [LQImageCacheType.Memory] : LQImageCacheType.All
-                                self!.cache!.setImage(image: image, imageData: data, forKey: self!.cacheKey!, cacheType: type)
+                                let type: [LQImageCacheType] = self!.options.contains(.IgnoreDiskCache) ? [.Memory] : LQImageCacheType.All
+                                var key = self!.cacheKey!
+                                if self!.options.contains(.OnlyDownloadFirstFrameWhenAnimationImage) && (self!.decoder!.imageType == .GIF || self!.decoder!.imageType == .APNG) {
+                                    // 处理OnlyDownloadFirstFrameWhenAnimationImage的情况
+                                    key = self!.cacheKey! + "firstFrame"
+                                    self!.perform(#selector(self!._cancelOperation), on: LQWebImageOperation._networkThread, with: nil, waitUntilDone: false)
+                                }
+                                self!.cache!.setImage(image: image, imageData: data, forKey: key, cacheType: type)
                             }
                         }
                     }
@@ -633,6 +668,11 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                 }
                 let imageTask = _session!.dataTask(with: request!)
                 imageTask.resume()
+                if !request!.url!.isFileURL && options.contains(.ShowNetworkActivity) {
+                    let networkActivityManager = LQNetworkActivityIndicatorManager.sharedManager
+                    networkActivityManager.enabled = true
+                    networkActivityManager.incrementActivityCount()
+                }
                 _session?.finishTasksAndInvalidate()
             }
         }

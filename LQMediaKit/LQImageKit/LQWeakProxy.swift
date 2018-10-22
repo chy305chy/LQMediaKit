@@ -1,6 +1,6 @@
 //
 //  LQProxy.swift
-//  LQMediaKitDemo
+//  LQMediaKit
 //
 //  Created by cuilanqing on 2018/9/29.
 //  Copyright © 2018 cuilanqing. All rights reserved.

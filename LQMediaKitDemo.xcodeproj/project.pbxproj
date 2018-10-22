@@ -7,6 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B6865722217977A100728BD7 /* LQWeakProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6865714217977A100728BD7 /* LQWeakProxy.swift */; };
+		B6865723217977A100728BD7 /* LQWebImageOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6865715217977A100728BD7 /* LQWebImageOperation.swift */; };
+		B6865724217977A100728BD7 /* UIImageView+LQWebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6865717217977A100728BD7 /* UIImageView+LQWebImage.swift */; };
+		B6865725217977A100728BD7 /* _LQWebImageSetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6865718217977A100728BD7 /* _LQWebImageSetter.swift */; };
+		B6865726217977A100728BD7 /* UIImage+Animated.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6865719217977A100728BD7 /* UIImage+Animated.swift */; };
+		B6865727217977A100728BD7 /* LQImageCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B686571A217977A100728BD7 /* LQImageCoder.swift */; };
+		B6865728217977A100728BD7 /* LQImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B686571B217977A100728BD7 /* LQImageCache.swift */; };
+		B6865729217977A100728BD7 /* LQWebImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B686571C217977A100728BD7 /* LQWebImageManager.swift */; };
+		B686572A217977A100728BD7 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = B686571E217977A100728BD7 /* Utilities.swift */; };
+		B686572B217977A100728BD7 /* LQDiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B686571F217977A100728BD7 /* LQDiskCache.swift */; };
+		B686572C217977A100728BD7 /* LQMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6865720217977A100728BD7 /* LQMemoryCache.swift */; };
+		B686572D217977A100728BD7 /* LQCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6865721217977A100728BD7 /* LQCache.swift */; };
+		B6865730217977C800728BD7 /* LQNetworkActivityIndicatorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B686572F217977C800728BD7 /* LQNetworkActivityIndicatorManager.swift */; };
+		B68657322179B2CD00728BD7 /* UIButton+LQWebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68657312179B2CD00728BD7 /* UIButton+LQWebImage.swift */; };
+		B68657352179B95F00728BD7 /* LQNetworkReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68657342179B95F00728BD7 /* LQNetworkReachabilityManager.swift */; };
 		B6ADDA6C21538EE900A548BB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ADDA6B21538EE900A548BB /* AppDelegate.swift */; };
 		B6ADDA6E21538EE900A548BB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ADDA6D21538EE900A548BB /* ViewController.swift */; };
 		B6ADDA7121538EE900A548BB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6ADDA6F21538EE900A548BB /* Main.storyboard */; };
@@ -14,18 +29,6 @@
 		B6ADDA7621538EEA00A548BB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6ADDA7421538EEA00A548BB /* LaunchScreen.storyboard */; };
 		B6ADDA8121538EEA00A548BB /* LQMediaKitDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ADDA8021538EEA00A548BB /* LQMediaKitDemoTests.swift */; };
 		B6ADDA8C21538EEA00A548BB /* LQMediaKitDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ADDA8B21538EEA00A548BB /* LQMediaKitDemoUITests.swift */; };
-		B6ADDA9E21538F6400A548BB /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ADDA9A21538F6400A548BB /* Utilities.swift */; };
-		B6ADDA9F21538F6400A548BB /* LQDiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ADDA9B21538F6400A548BB /* LQDiskCache.swift */; };
-		B6ADDAA021538F6400A548BB /* LQMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ADDA9C21538F6400A548BB /* LQMemoryCache.swift */; };
-		B6ADDAA121538F6400A548BB /* LQCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ADDA9D21538F6400A548BB /* LQCache.swift */; };
-		B6ADDAA52153919600A548BB /* LQWebImageOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ADDAA42153919600A548BB /* LQWebImageOperation.swift */; };
-		B6ADDAA7215391A800A548BB /* LQWebImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ADDAA6215391A800A548BB /* LQWebImageManager.swift */; };
-		B6ADDAA92153976500A548BB /* LQImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ADDAA82153976500A548BB /* LQImageCache.swift */; };
-		B6BA0059216E1EC0006A03FD /* UIImageView+LQImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BA0058216E1EC0006A03FD /* UIImageView+LQImage.swift */; };
-		B6BA005B216E2073006A03FD /* _LQWebImageSetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BA005A216E2073006A03FD /* _LQWebImageSetter.swift */; };
-		B6BA005D216EE8AA006A03FD /* UIImage+Animated.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BA005C216EE8AA006A03FD /* UIImage+Animated.swift */; };
-		B6DA29CD215F629200805F5E /* LQWeakProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DA29CC215F629200805F5E /* LQWeakProxy.swift */; };
-		B6F44C30215CCE9C00285833 /* LQImageCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F44C2F215CCE9C00285833 /* LQImageCoder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +49,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B6865714217977A100728BD7 /* LQWeakProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LQWeakProxy.swift; sourceTree = "<group>"; };
+		B6865715217977A100728BD7 /* LQWebImageOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LQWebImageOperation.swift; sourceTree = "<group>"; };
+		B6865717217977A100728BD7 /* UIImageView+LQWebImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+LQWebImage.swift"; sourceTree = "<group>"; };
+		B6865718217977A100728BD7 /* _LQWebImageSetter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = _LQWebImageSetter.swift; sourceTree = "<group>"; };
+		B6865719217977A100728BD7 /* UIImage+Animated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Animated.swift"; sourceTree = "<group>"; };
+		B686571A217977A100728BD7 /* LQImageCoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LQImageCoder.swift; sourceTree = "<group>"; };
+		B686571B217977A100728BD7 /* LQImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LQImageCache.swift; sourceTree = "<group>"; };
+		B686571C217977A100728BD7 /* LQWebImageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LQWebImageManager.swift; sourceTree = "<group>"; };
+		B686571E217977A100728BD7 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		B686571F217977A100728BD7 /* LQDiskCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LQDiskCache.swift; sourceTree = "<group>"; };
+		B6865720217977A100728BD7 /* LQMemoryCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LQMemoryCache.swift; sourceTree = "<group>"; };
+		B6865721217977A100728BD7 /* LQCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LQCache.swift; sourceTree = "<group>"; };
+		B686572F217977C800728BD7 /* LQNetworkActivityIndicatorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQNetworkActivityIndicatorManager.swift; sourceTree = "<group>"; };
+		B68657312179B2CD00728BD7 /* UIButton+LQWebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+LQWebImage.swift"; sourceTree = "<group>"; };
+		B68657342179B95F00728BD7 /* LQNetworkReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQNetworkReachabilityManager.swift; sourceTree = "<group>"; };
 		B6ADDA6821538EE900A548BB /* LQMediaKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LQMediaKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6ADDA6B21538EE900A548BB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B6ADDA6D21538EE900A548BB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -59,18 +77,6 @@
 		B6ADDA8721538EEA00A548BB /* LQMediaKitDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LQMediaKitDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6ADDA8B21538EEA00A548BB /* LQMediaKitDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQMediaKitDemoUITests.swift; sourceTree = "<group>"; };
 		B6ADDA8D21538EEA00A548BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B6ADDA9A21538F6400A548BB /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
-		B6ADDA9B21538F6400A548BB /* LQDiskCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LQDiskCache.swift; sourceTree = "<group>"; };
-		B6ADDA9C21538F6400A548BB /* LQMemoryCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LQMemoryCache.swift; sourceTree = "<group>"; };
-		B6ADDA9D21538F6400A548BB /* LQCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LQCache.swift; sourceTree = "<group>"; };
-		B6ADDAA42153919600A548BB /* LQWebImageOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQWebImageOperation.swift; sourceTree = "<group>"; };
-		B6ADDAA6215391A800A548BB /* LQWebImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQWebImageManager.swift; sourceTree = "<group>"; };
-		B6ADDAA82153976500A548BB /* LQImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQImageCache.swift; sourceTree = "<group>"; };
-		B6BA0058216E1EC0006A03FD /* UIImageView+LQImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+LQImage.swift"; sourceTree = "<group>"; };
-		B6BA005A216E2073006A03FD /* _LQWebImageSetter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _LQWebImageSetter.swift; sourceTree = "<group>"; };
-		B6BA005C216EE8AA006A03FD /* UIImage+Animated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Animated.swift"; sourceTree = "<group>"; };
-		B6DA29CC215F629200805F5E /* LQWeakProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQWeakProxy.swift; sourceTree = "<group>"; };
-		B6F44C2F215CCE9C00285833 /* LQImageCoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQImageCoder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,11 +104,72 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B6865712217977A100728BD7 /* LQMediaKit */ = {
+			isa = PBXGroup;
+			children = (
+				B68657332179B94800728BD7 /* Utilities */,
+				B686572E217977B500728BD7 /* UIKitExtension */,
+				B6865713217977A100728BD7 /* LQImageKit */,
+				B686571D217977A100728BD7 /* LQCacheKit */,
+			);
+			path = LQMediaKit;
+			sourceTree = "<group>";
+		};
+		B6865713217977A100728BD7 /* LQImageKit */ = {
+			isa = PBXGroup;
+			children = (
+				B6865716217977A100728BD7 /* Extensions */,
+				B6865715217977A100728BD7 /* LQWebImageOperation.swift */,
+				B6865714217977A100728BD7 /* LQWeakProxy.swift */,
+				B686571A217977A100728BD7 /* LQImageCoder.swift */,
+				B686571B217977A100728BD7 /* LQImageCache.swift */,
+				B686571C217977A100728BD7 /* LQWebImageManager.swift */,
+			);
+			path = LQImageKit;
+			sourceTree = "<group>";
+		};
+		B6865716217977A100728BD7 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				B6865717217977A100728BD7 /* UIImageView+LQWebImage.swift */,
+				B68657312179B2CD00728BD7 /* UIButton+LQWebImage.swift */,
+				B6865719217977A100728BD7 /* UIImage+Animated.swift */,
+				B6865718217977A100728BD7 /* _LQWebImageSetter.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		B686571D217977A100728BD7 /* LQCacheKit */ = {
+			isa = PBXGroup;
+			children = (
+				B686571E217977A100728BD7 /* Utilities.swift */,
+				B686571F217977A100728BD7 /* LQDiskCache.swift */,
+				B6865720217977A100728BD7 /* LQMemoryCache.swift */,
+				B6865721217977A100728BD7 /* LQCache.swift */,
+			);
+			path = LQCacheKit;
+			sourceTree = "<group>";
+		};
+		B686572E217977B500728BD7 /* UIKitExtension */ = {
+			isa = PBXGroup;
+			children = (
+				B686572F217977C800728BD7 /* LQNetworkActivityIndicatorManager.swift */,
+			);
+			path = UIKitExtension;
+			sourceTree = "<group>";
+		};
+		B68657332179B94800728BD7 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				B68657342179B95F00728BD7 /* LQNetworkReachabilityManager.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		B6ADDA5F21538EE900A548BB = {
 			isa = PBXGroup;
 			children = (
-				B6ADDAA2215390BE00A548BB /* LQImageKit */,
-				B6ADDA9921538F6400A548BB /* LQCacheKit */,
+				B6865712217977A100728BD7 /* LQMediaKit */,
 				B6ADDA6A21538EE900A548BB /* LQMediaKitDemo */,
 				B6ADDA7F21538EEA00A548BB /* LQMediaKitDemoTests */,
 				B6ADDA8A21538EEA00A548BB /* LQMediaKitDemoUITests */,
@@ -149,40 +216,6 @@
 				B6ADDA8D21538EEA00A548BB /* Info.plist */,
 			);
 			path = LQMediaKitDemoUITests;
-			sourceTree = "<group>";
-		};
-		B6ADDA9921538F6400A548BB /* LQCacheKit */ = {
-			isa = PBXGroup;
-			children = (
-				B6ADDA9A21538F6400A548BB /* Utilities.swift */,
-				B6ADDA9B21538F6400A548BB /* LQDiskCache.swift */,
-				B6ADDA9C21538F6400A548BB /* LQMemoryCache.swift */,
-				B6ADDA9D21538F6400A548BB /* LQCache.swift */,
-			);
-			path = LQCacheKit;
-			sourceTree = "<group>";
-		};
-		B6ADDAA2215390BE00A548BB /* LQImageKit */ = {
-			isa = PBXGroup;
-			children = (
-				B6ADDAA32153912900A548BB /* Extensions */,
-				B6ADDAA42153919600A548BB /* LQWebImageOperation.swift */,
-				B6ADDAA6215391A800A548BB /* LQWebImageManager.swift */,
-				B6ADDAA82153976500A548BB /* LQImageCache.swift */,
-				B6F44C2F215CCE9C00285833 /* LQImageCoder.swift */,
-				B6DA29CC215F629200805F5E /* LQWeakProxy.swift */,
-			);
-			path = LQImageKit;
-			sourceTree = "<group>";
-		};
-		B6ADDAA32153912900A548BB /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				B6BA0058216E1EC0006A03FD /* UIImageView+LQImage.swift */,
-				B6BA005A216E2073006A03FD /* _LQWebImageSetter.swift */,
-				B6BA005C216EE8AA006A03FD /* UIImage+Animated.swift */,
-			);
-			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -316,20 +349,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B6BA005B216E2073006A03FD /* _LQWebImageSetter.swift in Sources */,
-				B6ADDA9F21538F6400A548BB /* LQDiskCache.swift in Sources */,
-				B6ADDAA021538F6400A548BB /* LQMemoryCache.swift in Sources */,
-				B6ADDA9E21538F6400A548BB /* Utilities.swift in Sources */,
-				B6ADDAA7215391A800A548BB /* LQWebImageManager.swift in Sources */,
+				B686572B217977A100728BD7 /* LQDiskCache.swift in Sources */,
+				B6865726217977A100728BD7 /* UIImage+Animated.swift in Sources */,
 				B6ADDA6E21538EE900A548BB /* ViewController.swift in Sources */,
-				B6ADDAA92153976500A548BB /* LQImageCache.swift in Sources */,
-				B6DA29CD215F629200805F5E /* LQWeakProxy.swift in Sources */,
+				B686572D217977A100728BD7 /* LQCache.swift in Sources */,
+				B686572A217977A100728BD7 /* Utilities.swift in Sources */,
+				B6865727217977A100728BD7 /* LQImageCoder.swift in Sources */,
+				B6865724217977A100728BD7 /* UIImageView+LQWebImage.swift in Sources */,
+				B68657322179B2CD00728BD7 /* UIButton+LQWebImage.swift in Sources */,
+				B686572C217977A100728BD7 /* LQMemoryCache.swift in Sources */,
+				B6865730217977C800728BD7 /* LQNetworkActivityIndicatorManager.swift in Sources */,
+				B6865725217977A100728BD7 /* _LQWebImageSetter.swift in Sources */,
+				B6865728217977A100728BD7 /* LQImageCache.swift in Sources */,
 				B6ADDA6C21538EE900A548BB /* AppDelegate.swift in Sources */,
-				B6BA0059216E1EC0006A03FD /* UIImageView+LQImage.swift in Sources */,
-				B6F44C30215CCE9C00285833 /* LQImageCoder.swift in Sources */,
-				B6ADDAA121538F6400A548BB /* LQCache.swift in Sources */,
-				B6BA005D216EE8AA006A03FD /* UIImage+Animated.swift in Sources */,
-				B6ADDAA52153919600A548BB /* LQWebImageOperation.swift in Sources */,
+				B6865722217977A100728BD7 /* LQWeakProxy.swift in Sources */,
+				B6865723217977A100728BD7 /* LQWebImageOperation.swift in Sources */,
+				B68657352179B95F00728BD7 /* LQNetworkReachabilityManager.swift in Sources */,
+				B6865729217977A100728BD7 /* LQWebImageManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

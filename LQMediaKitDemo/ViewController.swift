@@ -13,13 +13,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     private var tableView: UITableView = UITableView(frame: CGRect.zero, style: .plain)
     
     
-    private var images = ["https://n.sinaimg.cn/photo/transform/700/w1000h500/20180926/_3Fr-hkmwytp2209491.jpg",
-                          "http://i1.hoopchina.com.cn/u/1203/07/152/15516152/c5b1adbb.gif",
+    private var images = ["http://i1.hoopchina.com.cn/u/1203/07/152/15516152/c5b1adbb.gif",
                           "http://i.imgur.com/GP1m9.png",
+                          "https://n.sinaimg.cn/photo/transform/700/w1000h500/20180926/_3Fr-hkmwytp2209491.jpg",
                           "http://c.hiphotos.baidu.com/zhidao/pic/item/7aec54e736d12f2e0bd5528c48c2d5628435680e.jpg",
                           "http://wallpaperswide.com/download/mount_rainier_over_edith_creek-wallpaper-320x480.jpg",
-                          "http://wallpaperswide.com/download/mount_rainier_over_edith_creek-wallpaper-1920x1080.jpg",
-                          "http://img4.imgtn.bdimg.com/it/u=2943299147,2485325577&fm=26&gp=0.jpg",
                           "http://imgsrc.baidu.com/imgad/pic/item/34fae6cd7b899e51fab3e9c048a7d933c8950d21.jpg",
                           "http://pic2.ooopic.com/11/76/10/88bOOOPIC83_1024.jpg",
                           "http://imgsrc.baidu.com/imgad/pic/item/21a4462309f79052df1c9eea06f3d7ca7acbd5e7.jpg",
@@ -42,7 +40,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     
 //     private var images = ["https://n.sinaimg.cn/photo/transform/700/w1000h500/20180926/_3Fr-hkmwytp2209491.jpg"]
-    
+// "http://wallpaperswide.com/download/mount_rainier_over_edith_creek-wallpaper-1920x1080.jpg",
+// "http://img4.imgtn.bdimg.com/it/u=2943299147,2485325577&fm=26&gp=0.jpg",
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -76,9 +75,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let cell: TestCell = tableView.dequeueReusableCell(withIdentifier: "com.lqmediakit.test.tablecell", for: indexPath) as! TestCell
         
         cell.imgView.setImage(withUrl: URL(string: images[indexPath.row]))
-//        cell.imgView.setImage(withUrl: URL(string: images[indexPath.row]), placeholder: nil, options: [.Progressive, .AllowInvalidSSLCertificate], progress: { (received, total) in
-//            print("======\(received)=====\(total)")
-//        }, transform: nil, completion: nil)
         
         return cell
     }

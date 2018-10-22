@@ -1,6 +1,6 @@
 //
 //  UIImage+Animated.swift
-//  LQMediaKitDemo
+//  LQMediaKit
 //
 //  Created by cuilanqing on 2018/10/11.
 //  Copyright © 2018 cuilanqing. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  LQDiskCache.swift
-//  LQCacheKitDemo
+//  LQCacheKit
 //
 //  Created by cuilanqing on 2018/9/14.
 //  Copyright © 2018 cuilanqing. All rights reserved.

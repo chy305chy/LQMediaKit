@@ -1,12 +1,14 @@
 //
 //  _LQWebImageSetter.swift
-//  LQMediaKitDemo
+//  LQMediaKit
 //
 //  Created by cuilanqing on 2018/10/10.
 //  Copyright © 2018 cuilanqing. All rights reserved.
 //
 
 import Foundation
+
+let _LQWebImageFadeAnimationKey = "com.lqmediakit.image.fadeanimation"
 
 class _LQWebImageSetter: NSObject {
     private(set) var imageUrl: URL?
@@ -18,7 +20,6 @@ class _LQWebImageSetter: NSObject {
     
     static let setterQueue = { () -> DispatchQueue in
         let queue = DispatchQueue(label: "com.lqmediakit.image.setterqueue")
-//        queue.setTarget(queue: DispatchQueue.global(qos: .default))
         return queue
     }()
     
