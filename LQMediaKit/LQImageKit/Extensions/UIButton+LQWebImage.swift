@@ -11,4 +11,8 @@ import UIKit
 
 extension UIButton {
     
+    private func setImage(withUrl url: String, forState state: UIControl.State, placeholder: UIImage?, options: [LQWebImageOptions], manager: LQWebImageManager?, progress: LQWebImageProgress?, transform: LQWebImageTransform?, completion: LQWebImageCompletion?)  {
+        
+    }
+    
 }

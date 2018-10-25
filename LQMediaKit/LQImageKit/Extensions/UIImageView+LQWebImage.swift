@@ -38,7 +38,7 @@ extension UIImageView {
     
     //MARK: - Normal Image
     func setImage(withUrl url: URL?) {
-        setImage(withUrl: url, placeholder: nil, options: [.AllowInvalidSSLCertificate, .ShowNetworkActivity, .ShowFadeAnimationWhenSetImage, .OnlyDownloadFirstFrameWhenAnimationImage], manager: nil, progress: nil, transform: nil, completion: nil)
+        setImage(withUrl: url, placeholder: nil, options: [.AllowInvalidSSLCertificate, .ShowNetworkActivity, .ShowFadeAnimationWhenSetImage], manager: nil, progress: nil, transform: nil, completion: nil)
     }
     
     func setImage(withUrl url: URL?, placeholder: UIImage?) {
