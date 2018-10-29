@@ -74,7 +74,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: TestCell = tableView.dequeueReusableCell(withIdentifier: "com.lqmediakit.test.tablecell", for: indexPath) as! TestCell
         
-        cell.imgView.setImage(withUrl: URL(string: images[indexPath.row]))
+        cell.imgView.layer.setImage(withUrl: URL(string: images[indexPath.row]))
+//        cell.imgView.setImage(withUrl: URL(string: images[indexPath.row]), placeholder: nil, options: [.AllowInvalidSSLCertificate, .Progressive], progress: { (received, total) in
+//            print("===\(received)===\(total)")
+//        }, transform: nil, completion: nil)
         
         return cell
     }

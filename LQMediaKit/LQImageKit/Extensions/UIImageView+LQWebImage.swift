@@ -12,8 +12,8 @@ import UIKit
 extension UIImageView {
     
     struct RuntimeKey {
-        static var image_setter_key = "com.lqmediakit.image.imagesetter"
-        static var highlighted_image_setter_key = "com.lqmediakit.image.highlightedimagesetter"
+        static var image_setter_key = "com.lqmediakit.image.imagesetter.imageview"
+        static var highlighted_image_setter_key = "com.lqmediakit.image.imagesetter.highlightedimageview"
     }
     
     var imageUrl: URL? {

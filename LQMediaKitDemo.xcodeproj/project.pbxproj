@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B655F29A2186B1240020B21A /* CALayer+LQWebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B655F2992186B1240020B21A /* CALayer+LQWebImage.swift */; };
 		B6865722217977A100728BD7 /* LQWeakProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6865714217977A100728BD7 /* LQWeakProxy.swift */; };
 		B6865723217977A100728BD7 /* LQWebImageOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6865715217977A100728BD7 /* LQWebImageOperation.swift */; };
 		B6865724217977A100728BD7 /* UIImageView+LQWebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6865717217977A100728BD7 /* UIImageView+LQWebImage.swift */; };
@@ -49,6 +50,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B655F2992186B1240020B21A /* CALayer+LQWebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+LQWebImage.swift"; sourceTree = "<group>"; };
 		B6865714217977A100728BD7 /* LQWeakProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LQWeakProxy.swift; sourceTree = "<group>"; };
 		B6865715217977A100728BD7 /* LQWebImageOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LQWebImageOperation.swift; sourceTree = "<group>"; };
 		B6865717217977A100728BD7 /* UIImageView+LQWebImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+LQWebImage.swift"; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 			children = (
 				B6865717217977A100728BD7 /* UIImageView+LQWebImage.swift */,
 				B68657312179B2CD00728BD7 /* UIButton+LQWebImage.swift */,
+				B655F2992186B1240020B21A /* CALayer+LQWebImage.swift */,
 				B6865719217977A100728BD7 /* UIImage+Animated.swift */,
 				B6865718217977A100728BD7 /* _LQWebImageSetter.swift */,
 			);
@@ -362,6 +365,7 @@
 				B6865725217977A100728BD7 /* _LQWebImageSetter.swift in Sources */,
 				B6865728217977A100728BD7 /* LQImageCache.swift in Sources */,
 				B6ADDA6C21538EE900A548BB /* AppDelegate.swift in Sources */,
+				B655F29A2186B1240020B21A /* CALayer+LQWebImage.swift in Sources */,
 				B6865722217977A100728BD7 /* LQWeakProxy.swift in Sources */,
 				B6865723217977A100728BD7 /* LQWebImageOperation.swift in Sources */,
 				B68657352179B95F00728BD7 /* LQNetworkReachabilityManager.swift in Sources */,

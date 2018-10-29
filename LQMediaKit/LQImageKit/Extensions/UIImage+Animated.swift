@@ -23,12 +23,6 @@ extension UIImage {
         }
         self.init(cgImage: image!.cgImage!, scale: scale, orientation: image!.imageOrientation)
         
-//        if decoder.framesCount > 1 {
-//
-//        } else {
-//
-//        }
-        
         self.isDecoded = true
     }
     

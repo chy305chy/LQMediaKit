@@ -366,11 +366,12 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                 lock {
                     if !self.isCancelled {
                         LQWebImageOperation._imageProcessQueue.async { [weak self] in
-                            if self == nil || self!.imageData == nil {
+                            guard self != nil && self?.imageData != nil else {
                                 return
                             }
-                            if self!.decoder == nil {
-                                self!.decoder = LQImageDecoder()
+                            
+                            if self?.decoder == nil {
+                                self?.decoder = LQImageDecoder()
                             }
                             
                             let shouldDecode = !self!.options.contains(LQWebImageOptions.IgnoreImagePreDecode)
@@ -387,6 +388,7 @@ class LQWebImageOperation: Operation, URLSessionDelegate, URLSessionDataDelegate
                                 image = self!.decoder!.imageAtIndex(0, shouldDecode: shouldDecode)
                             }
                             
+                            guard self != nil else {return}
                             if self!.isCancelled {
                                 return
                             }
