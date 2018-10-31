@@ -138,11 +138,28 @@ class LQVideoPlayer: UIView {
 }
 
 /// 播放器指示条
-private class _VideoIndicatorBar: UIProgressView {
+fileprivate class _VideoIndicatorBar: UIView {
+    
+    fileprivate var _progressBarTrackTintColor: UIColor?
+    fileprivate var _progressBarLoadProgressTintColor: UIColor?
+    fileprivate var _progressBarPlayProgressTintColor: UIColor?
+    fileprivate var _indicatorDotColor: UIColor?
+    
+    private var _progressBarTrackLayer: CALayer
+    private var _progressBarLoadLayer: CALayer
+    private var _progressBarPlayLayer: CALayer
+    private var _indicatorDot: CAShapeLayer
+    
+    private let _barHeight: CGFloat = 2
+    private let _dotHeight: CGFloat = 16
     
     private override init(frame: CGRect) {
+        _progressBarTrackLayer = CALayer()
+        _progressBarLoadLayer = CALayer()
+        _progressBarPlayLayer = CALayer()
+        _indicatorDot = CAShapeLayer()
         super.init(frame: frame)
-        
+
     }
     
     convenience init(withWidth width: CGFloat) {
@@ -152,6 +169,32 @@ private class _VideoIndicatorBar: UIProgressView {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+    }
+    
+    private func setLayers() {
+        _progressBarTrackLayer.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: _barHeight)
+        _progressBarLoadLayer.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: _barHeight)
+        _progressBarPlayLayer.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: _barHeight)
+        _indicatorDot.frame = CGRect(x: _dotHeight / 2, y: (self.frame.size.height - _dotHeight) / 2, width: _dotHeight, height: _dotHeight)
+        _progressBarTrackLayer.position = self.center
+        _progressBarLoadLayer.position = self.center
+        _progressBarPlayLayer.position = self.center
+        
+        let path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: _dotHeight, height: _dotHeight))
+        _indicatorDot.fillColor = (_indicatorDotColor ?? UIColor.white).cgColor
+        _indicatorDot.path = path.cgPath
     }
     
 }
