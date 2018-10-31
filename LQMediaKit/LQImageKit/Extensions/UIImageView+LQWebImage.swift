@@ -100,9 +100,10 @@ extension UIImageView {
             self.image = placeholder
             
             _LQWebImageSetter.setterQueue.async { [weak self] in
-                if self == nil {
+                guard self != nil else {
                     return
                 }
+                
                 var newIdentifier: __int32_t = 0
                 weak var weakSetter: _LQWebImageSetter?
                 let newCompletion: LQWebImageCompletion = { (url, image, loadStatus, error) -> Void in

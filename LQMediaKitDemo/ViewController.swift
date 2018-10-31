@@ -36,12 +36,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                           "http://pic29.photophoto.cn/20131021/0005018459075260_b.jpg",
                           "http://imgsrc.baidu.com/imgad/pic/item/0bd162d9f2d3572c25e340088013632763d0c3e5.jpg",
                           "http://pic5.photophoto.cn/20071217/0008020241208713_b.jpg"]
+
+//    private var images = ["https://n.sinaimg.cn/photo/transform/700/w1000h500/20180926/_3Fr-hkmwytp2209491.jpg",
+//                          "http://c.hiphotos.baidu.com/zhidao/pic/item/7aec54e736d12f2e0bd5528c48c2d5628435680e.jpg"]
+//                          "http://wallpaperswide.com/download/mount_rainier_over_edith_creek-wallpaper-320x480.jpg",
+//                          "http://imgsrc.baidu.com/imgad/pic/item/34fae6cd7b899e51fab3e9c048a7d933c8950d21.jpg",
+//                          "http://pic2.ooopic.com/11/76/10/88bOOOPIC83_1024.jpg"]
+//                          "http://imgsrc.baidu.com/imgad/pic/item/21a4462309f79052df1c9eea06f3d7ca7acbd5e7.jpg",
+//                          "http://pic5.photophoto.cn/20071228/0034034901778224_b.jpg",
+//                          "http://pic21.photophoto.cn/20111106/0020032891433708_b.jpg",
+//                          "http://attach.bbs.miui.com/forum/201303/16/173716jzszx8vbbb0z9o4k.jpg"]
+    //["http://ohjdda8lm.bkt.clouddn.com/course/sample1.mp4"]//
+    private var videos = ["http://he.yinyuetai.com/uploads/videos/common/87530166C8F630AA091F99E4CA127D0C.mp4?sc=c6acca50bc1e0283"]
     
-    
-    
-//     private var images = ["https://n.sinaimg.cn/photo/transform/700/w1000h500/20180926/_3Fr-hkmwytp2209491.jpg"]
-// "http://wallpaperswide.com/download/mount_rainier_over_edith_creek-wallpaper-1920x1080.jpg",
-// "http://img4.imgtn.bdimg.com/it/u=2943299147,2485325577&fm=26&gp=0.jpg",
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -51,7 +58,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.separatorStyle = .singleLine
         tableView.register(TestCell.self, forCellReuseIdentifier: "com.lqmediakit.test.tablecell")
         
-        self.view.addSubview(tableView)
+//        self.view.addSubview(tableView)
+        
+        let w = UIScreen.main.bounds.size.width
+        let h = 9 * w / 16
+        let videoPlayerView = LQVideoPlayer(frame: CGRect(x: 0, y: 20, width: w, height: h))
+        self.view.addSubview(videoPlayerView)
+        videoPlayerView.url = URL(string: videos[0])
     }
     
     override func viewWillLayoutSubviews() {
@@ -74,7 +87,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: TestCell = tableView.dequeueReusableCell(withIdentifier: "com.lqmediakit.test.tablecell", for: indexPath) as! TestCell
         
-        cell.imgView.layer.setImage(withUrl: URL(string: images[indexPath.row]))
+        cell.imgView.setImage(withUrl: URL(string: images[indexPath.row]))
 //        cell.imgView.setImage(withUrl: URL(string: images[indexPath.row]), placeholder: nil, options: [.AllowInvalidSSLCertificate, .Progressive], progress: { (received, total) in
 //            print("===\(received)===\(total)")
 //        }, transform: nil, completion: nil)

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B655F29A2186B1240020B21A /* CALayer+LQWebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B655F2992186B1240020B21A /* CALayer+LQWebImage.swift */; };
+		B6686F4A21899681004D5558 /* LQVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6686F4921899681004D5558 /* LQVideoPlayer.swift */; };
 		B6865722217977A100728BD7 /* LQWeakProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6865714217977A100728BD7 /* LQWeakProxy.swift */; };
 		B6865723217977A100728BD7 /* LQWebImageOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6865715217977A100728BD7 /* LQWebImageOperation.swift */; };
 		B6865724217977A100728BD7 /* UIImageView+LQWebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6865717217977A100728BD7 /* UIImageView+LQWebImage.swift */; };
@@ -51,6 +52,7 @@
 
 /* Begin PBXFileReference section */
 		B655F2992186B1240020B21A /* CALayer+LQWebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+LQWebImage.swift"; sourceTree = "<group>"; };
+		B6686F4921899681004D5558 /* LQVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQVideoPlayer.swift; sourceTree = "<group>"; };
 		B6865714217977A100728BD7 /* LQWeakProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LQWeakProxy.swift; sourceTree = "<group>"; };
 		B6865715217977A100728BD7 /* LQWebImageOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LQWebImageOperation.swift; sourceTree = "<group>"; };
 		B6865717217977A100728BD7 /* UIImageView+LQWebImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+LQWebImage.swift"; sourceTree = "<group>"; };
@@ -106,11 +108,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B6686F4821898D89004D5558 /* LQVideoKit */ = {
+			isa = PBXGroup;
+			children = (
+				B6686F4921899681004D5558 /* LQVideoPlayer.swift */,
+			);
+			path = LQVideoKit;
+			sourceTree = "<group>";
+		};
+		B67AB4B02187F9ED00FDFB92 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		B6865712217977A100728BD7 /* LQMediaKit */ = {
 			isa = PBXGroup;
 			children = (
 				B68657332179B94800728BD7 /* Utilities */,
 				B686572E217977B500728BD7 /* UIKitExtension */,
+				B6686F4821898D89004D5558 /* LQVideoKit */,
 				B6865713217977A100728BD7 /* LQImageKit */,
 				B686571D217977A100728BD7 /* LQCacheKit */,
 			);
@@ -177,6 +195,7 @@
 				B6ADDA7F21538EEA00A548BB /* LQMediaKitDemoTests */,
 				B6ADDA8A21538EEA00A548BB /* LQMediaKitDemoUITests */,
 				B6ADDA6921538EE900A548BB /* Products */,
+				B67AB4B02187F9ED00FDFB92 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -358,6 +377,7 @@
 				B686572D217977A100728BD7 /* LQCache.swift in Sources */,
 				B686572A217977A100728BD7 /* Utilities.swift in Sources */,
 				B6865727217977A100728BD7 /* LQImageCoder.swift in Sources */,
+				B6686F4A21899681004D5558 /* LQVideoPlayer.swift in Sources */,
 				B6865724217977A100728BD7 /* UIImageView+LQWebImage.swift in Sources */,
 				B68657322179B2CD00728BD7 /* UIButton+LQWebImage.swift in Sources */,
 				B686572C217977A100728BD7 /* LQMemoryCache.swift in Sources */,
@@ -545,6 +565,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = LQMediaKitDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -565,6 +589,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = LQMediaKitDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
